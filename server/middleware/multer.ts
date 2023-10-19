@@ -1,19 +1,36 @@
+import multer from 'multer';
 import { Request } from 'express';
-import multer, { Multer, diskStorage } from 'multer';
 
-const storage = diskStorage({
-    destination: function (
+const csvFilter = (
+    req: Request,
+    file: Express.Multer.File,
+    callback: (error: Error | null, acceptFile: boolean) => void
+) => {
+    if (file.mimetype.includes('csv')) {
+        callback(null, true);
+    } else {
+        callback(new Error('Please upload only csv file'), false);
+    }
+};
+
+const storage = multer.diskStorage({
+    destination: (
         req: Request,
         file: Express.Multer.File,
-        cb: Function
-    ) {
-        cb(null, 'uploads/');
+        callback: (error: Error | null, destination: string) => void
+    ) => {
+        callback(null, 'uploads/');
     },
-    filename: function (req: Request, file: Express.Multer.File, cb: Function) {
-        cb(null, file.originalname);
+    filename: (
+        req: Request,
+        file: Express.Multer.File,
+        callback: (error: Error | null, filename: string) => void
+    ) => {
+        console.log(file.originalname);
+        callback(null, `${Date.now()}-bezkoder-${file.originalname}`);
     },
 });
 
-const upload: Multer = multer({ storage });
+const uploadFile = multer({ storage: storage });
 
-export default upload;
+export default uploadFile;
