@@ -27,10 +27,10 @@ const storage = multer.diskStorage({
         callback: (error: Error | null, filename: string) => void
     ) => {
         console.log(file.originalname);
-        callback(null, `${Date.now()}-bezkoder-${file.originalname}`);
+        callback(null, `${Date.now()}-${file.originalname}`);
     },
 });
 
-const uploadFile = multer({ storage: storage });
+const upload = multer({ storage: storage });
 
-export default uploadFile;
+export default upload;
